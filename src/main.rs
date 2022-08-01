@@ -3,6 +3,7 @@ extern crate rocket;
 
 mod db_helper;
 mod signup;
+mod login;
 
 //use rocket::form::Form;
 use rocket::fairing::AdHoc;
@@ -14,10 +15,10 @@ use db_helper::Db;
 
 #[get("/")]
 async fn index(db: &State<Db>) -> Template {
-    let users = db.select_all().await;
+    let users = db.select_user_by_id(0).await;
 
     match users {
-        Ok(u) => Template::render("index", context! {name: &u[0].username}),
+        Ok(u) => Template::render("index", context! {name: &u.username}),
         Err(_e) => Template::render("index", context! {}),
     }
 }

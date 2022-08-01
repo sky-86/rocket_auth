@@ -1,7 +1,9 @@
 use futures::executor::block_on;
+use sqlx::Row;
 use sqlx::postgres::PgPool;
 use sqlx::postgres::PgPoolOptions;
 use sqlx::FromRow;
+use crate::signup::CreateInfo;
 
 #[derive(FromRow)]
 pub struct User {
@@ -19,7 +21,7 @@ impl Db {
     pub fn connect() -> Db {
         let pool = block_on(PgPoolOptions::new()
             .max_connections(5)
-            .connect("postgresql://postgres:0wXfOxfV8V4D70jCpJII@containers-us-west-38.railway.app:5873/railway"));
+            .connect("postgresql://postgres:1234@localhost:5432/postgres"));
 
         match pool {
             Ok(pool) => Db { pool },
@@ -33,6 +35,20 @@ impl Db {
             .await?;
 
         Ok(users)
+    }
+
+    pub async fn create_user(&self, username: &str, email: &str, password: &str) -> Result<i64, sqlx::Error> {
+        let id = sqlx::query
+            ("INSERT INTO users (username,email,password) VALUES ($1,$2,$3) RETURNING id;")
+            .bind(username)
+            .bind(email)
+            .bind(password)
+            .fetch_one(&self.pool)
+            .await?;
+
+        let id = id.get::<i64, _>("id");
+        println!("new user: {}", id);
+        Ok(id)
     }
 
     pub async fn select_user_by_id(&self, id: i32) -> Result<User, sqlx::Error> {

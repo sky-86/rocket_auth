@@ -5,3 +5,7 @@
   <input type="password" name="pass-repeat" placeholder="Retype Password...">
   <button type="submit" name="signup-submit">Signup</button>
 </form>
+{% if error %}
+<h3>{{ error }}</h3>
+{% endif %}
+
