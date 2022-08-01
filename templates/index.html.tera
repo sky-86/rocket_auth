@@ -1,0 +1,7 @@
+{% extends "base" %}
+
+{% block content %}
+    {% if name %}
+      <h1>Hi {{ name }}!</h1>
+    {% endif %}
+{% endblock content %}

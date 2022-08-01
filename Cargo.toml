@@ -1,0 +1,12 @@
+[package]
+name = "rust_login"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rocket = { version="0.5.0-rc.2", features=["secrets"] }
+rocket_dyn_templates = { version="0.1.0-rc.2", features=["tera"] }
+sqlx = { version = "0.6", features = [ "runtime-tokio-rustls", "postgres" ] }  
+futures = "0.3.21"
+#tokio-postgres = "0.7.6"
+#rocket_auth = { version="0.4.0", features=["tokio-postgres"] }
